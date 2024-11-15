@@ -162,6 +162,7 @@ int reftable_writer_new(struct reftable_writer **out,
 
 	reftable_buf_init(&wp->block_writer_data.last_key);
 	reftable_buf_init(&wp->last_key);
+	reftable_buf_init(&wp->buf);
 	REFTABLE_CALLOC_ARRAY(wp->block, opts.block_size);
 	if (!wp->block) {
 		reftable_free(wp);
@@ -194,6 +195,7 @@ static void writer_release(struct reftable_writer *w)
 		w->block_writer = NULL;
 		writer_clear_index(w);
 		reftable_buf_release(&w->last_key);
+		reftable_buf_release(&w->buf);
 	}
 }
 
@@ -263,20 +265,19 @@ static int writer_index_hash(struct reftable_writer *w, struct reftable_buf *has
 static int writer_add_record(struct reftable_writer *w,
 			     struct reftable_record *rec)
 {
-	struct reftable_buf key = REFTABLE_BUF_INIT;
 	int err;
 
-	err = reftable_record_key(rec, &key);
+	err = reftable_record_key(rec, &w->buf);
 	if (err < 0)
 		goto done;
 
-	if (reftable_buf_cmp(&w->last_key, &key) >= 0) {
+	if (reftable_buf_cmp(&w->last_key, &w->buf) >= 0) {
 		err = REFTABLE_API_ERROR;
 		goto done;
 	}
 
 	reftable_buf_reset(&w->last_key);
-	err = reftable_buf_add(&w->last_key, key.buf, key.len);
+	err = reftable_buf_add(&w->last_key, w->buf.buf, w->buf.len);
 	if (err < 0)
 		goto done;
 
@@ -326,7 +327,6 @@ static int writer_add_record(struct reftable_writer *w,
 	}
 
 done:
-	reftable_buf_release(&key);
 	return err;
 }
 
@@ -339,7 +339,6 @@ int reftable_writer_add_ref(struct reftable_writer *w,
 			.ref = *ref
 		},
 	};
-	struct reftable_buf buf = REFTABLE_BUF_INIT;
 	int err;
 
 	if (!ref->refname ||
@@ -354,24 +353,25 @@ int reftable_writer_add_ref(struct reftable_writer *w,
 		goto out;
 
 	if (!w->opts.skip_index_objects && reftable_ref_record_val1(ref)) {
-		err = reftable_buf_add(&buf, (char *)reftable_ref_record_val1(ref),
+		reftable_buf_reset(&w->buf);
+		err = reftable_buf_add(&w->buf, (char *)reftable_ref_record_val1(ref),
 				       hash_size(w->opts.hash_id));
 		if (err < 0)
 			goto out;
 
-		err = writer_index_hash(w, &buf);
+		err = writer_index_hash(w, &w->buf);
 		if (err < 0)
 			goto out;
 	}
 
 	if (!w->opts.skip_index_objects && reftable_ref_record_val2(ref)) {
-		reftable_buf_reset(&buf);
-		err = reftable_buf_add(&buf, reftable_ref_record_val2(ref),
+		reftable_buf_reset(&w->buf);
+		err = reftable_buf_add(&w->buf, reftable_ref_record_val2(ref),
 				       hash_size(w->opts.hash_id));
 		if (err < 0)
 			goto out;
 
-		err = writer_index_hash(w, &buf);
+		err = writer_index_hash(w, &w->buf);
 		if (err < 0)
 			goto out;
 	}
@@ -379,7 +379,6 @@ int reftable_writer_add_ref(struct reftable_writer *w,
 	err = 0;
 
 out:
-	reftable_buf_release(&buf);
 	return err;
 }
 
