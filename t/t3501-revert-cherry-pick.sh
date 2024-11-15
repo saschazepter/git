@@ -228,6 +228,18 @@ test_expect_success 'identification of reverted commit (--reference)' '
 	test_cmp expect actual
 '
 
+test_expect_success 'git revert --reference with core.commentChar' '
+	test_when_finished "git reset --hard to-ident" &&
+	git checkout --detach to-ident &&
+	git -c core.commentChar=% revert \
+		--edit --reference HEAD &&
+	git log -1 --format=%B HEAD >actual &&
+	printf "This reverts commit $(git show -s \
+		--pretty=reference HEAD^).\n\n" \
+		>expect &&
+	test_cmp expect actual
+'
+
 test_expect_success 'identification of reverted commit (revert.reference)' '
 	git checkout --detach to-ident &&
 	git -c revert.reference=true revert --no-edit HEAD &&
