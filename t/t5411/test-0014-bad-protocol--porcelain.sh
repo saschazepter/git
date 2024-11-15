@@ -21,7 +21,6 @@ test_expect_success "proc-receive: bad protocol (unknown version, $PROTOCOL/porc
 	cat >expect <<-EOF &&
 	To <URL/of/upstream.git>
 	!	HEAD:refs/for/main/topic	[remote rejected] (fail to run proc-receive hook)
-	Done
 	EOF
 	test_cmp expect actual-report &&
 
@@ -59,7 +58,6 @@ test_expect_success "proc-receive: bad protocol (hook --die-read-version, $PROTO
 	cat >expect <<-EOF &&
 	To <URL/of/upstream.git>
 	!	HEAD:refs/for/main/topic	[remote rejected] (fail to run proc-receive hook)
-	Done
 	EOF
 	test_cmp expect actual &&
 	grep "remote: fatal: die with the --die-read-version option" out-$test_count &&
@@ -90,7 +88,6 @@ test_expect_success "proc-receive: bad protocol (hook --die-write-version, $PROT
 	cat >expect <<-EOF &&
 	To <URL/of/upstream.git>
 	!	HEAD:refs/for/main/topic	[remote rejected] (fail to run proc-receive hook)
-	Done
 	EOF
 	test_cmp expect actual &&
 	grep "remote: fatal: die with the --die-write-version option" out-$test_count &&
@@ -121,7 +118,6 @@ test_expect_success "proc-receive: bad protocol (hook --die-read-commands, $PROT
 	cat >expect <<-EOF &&
 	To <URL/of/upstream.git>
 	!	HEAD:refs/for/main/topic	[remote rejected] (fail to run proc-receive hook)
-	Done
 	EOF
 	test_cmp expect actual &&
 	grep "remote: fatal: die with the --die-read-commands option" out-$test_count &&
@@ -153,7 +149,6 @@ test_expect_success "proc-receive: bad protocol (hook --die-read-push-options, $
 	cat >expect <<-EOF &&
 	To <URL/of/upstream.git>
 	!	HEAD:refs/for/main/topic	[remote rejected] (fail to run proc-receive hook)
-	Done
 	EOF
 	test_cmp expect actual &&
 	grep "remote: fatal: die with the --die-read-push-options option" out-$test_count &&
@@ -183,7 +178,6 @@ test_expect_success "proc-receive: bad protocol (hook --die-write-report, $PROTO
 	cat >expect <<-EOF &&
 	To <URL/of/upstream.git>
 	!	HEAD:refs/for/main/topic	[remote rejected] (fail to run proc-receive hook)
-	Done
 	EOF
 	test_cmp expect actual &&
 	grep "remote: fatal: die with the --die-write-report option" out-$test_count &&
@@ -219,7 +213,6 @@ test_expect_success "proc-receive: bad protocol (no report, $PROTOCOL/porcelain)
 	> To <URL/of/upstream.git>
 	> *	HEAD:refs/heads/next	[new branch]
 	> !	HEAD:refs/for/main/topic	[remote rejected] (proc-receive failed to report status)
-	> Done
 	EOF
 	test_cmp expect actual &&
 
@@ -260,7 +253,6 @@ test_expect_success "proc-receive: bad protocol (no ref, $PROTOCOL/porcelain)" '
 	> remote: error: proc-receive reported incomplete status line: "ok"        Z
 	> To <URL/of/upstream.git>
 	> !	HEAD:refs/for/main/topic	[remote rejected] (proc-receive failed to report status)
-	> Done
 	EOF
 	test_cmp expect actual &&
 
@@ -294,7 +286,6 @@ test_expect_success "proc-receive: bad protocol (unknown status, $PROTOCOL/porce
 	> remote: error: proc-receive reported bad status "xx" on ref "refs/for/main/topic"        Z
 	> To <URL/of/upstream.git>
 	> !	HEAD:refs/for/main/topic	[remote rejected] (proc-receive failed to report status)
-	> Done
 	EOF
 	test_cmp expect actual &&
 

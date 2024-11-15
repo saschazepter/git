@@ -25,7 +25,6 @@ test_expect_success "proc-receive: report option without matching ok ($PROTOCOL/
 	> remote: error: proc-receive reported "option" without a matching "ok/ng" directive        Z
 	> To <URL/of/upstream.git>
 	> !	HEAD:refs/for/main/topic	[remote rejected] (proc-receive failed to report status)
-	> Done
 	EOF
 	test_cmp expect actual
 '

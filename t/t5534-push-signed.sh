@@ -384,7 +384,6 @@ test_expect_success GPG 'failed atomic push does not execute GPG' '
 	=	refs/heads/noop:refs/heads/noop	[up to date]
 	!	refs/heads/ff:refs/heads/ff	[rejected] (atomic push failed)
 	!	refs/heads/noff:refs/heads/noff	[rejected] (non-fast-forward)
-	Done
 	EOF
 	test_cmp expect out
 '

@@ -73,7 +73,6 @@ test_expect_success "non-fast-forward git-push ($PROTOCOL/porcelain)" '
 	> To <URL/of/upstream.git>
 	>  	<COMMIT-B>:refs/heads/next	<COMMIT-A>..<COMMIT-B>
 	> !	refs/heads/main:refs/heads/main	[rejected] (non-fast-forward)
-	> Done
 	EOF
 	test_cmp expect actual &&
 

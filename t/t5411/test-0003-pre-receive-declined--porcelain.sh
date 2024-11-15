@@ -18,7 +18,6 @@ test_expect_success "git-push is declined ($PROTOCOL/porcelain)" '
 	> To <URL/of/upstream.git>
 	> !	<COMMIT-B>:refs/heads/main	[remote rejected] (pre-receive hook declined)
 	> !	HEAD:refs/heads/next	[remote rejected] (pre-receive hook declined)
-	Done
 	EOF
 	test_cmp expect actual &&
 

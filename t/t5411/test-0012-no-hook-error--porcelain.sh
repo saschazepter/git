@@ -17,7 +17,6 @@ test_expect_success "proc-receive: no hook, fail to push special ref ($PROTOCOL/
 	> To <URL/of/upstream.git>
 	> *	HEAD:refs/heads/next	[new branch]
 	> !	HEAD:refs/for/main/topic	[remote rejected] (fail to run proc-receive hook)
-	Done
 	EOF
 	test_cmp expect actual &&
 
@@ -52,7 +51,6 @@ test_expect_success "proc-receive: no hook, all failed for atomic push ($PROTOCO
 	> !	<COMMIT-B>:refs/heads/main	[remote rejected] (fail to run proc-receive hook)
 	> !	HEAD:refs/heads/next	[remote rejected] (fail to run proc-receive hook)
 	> !	HEAD:refs/for/main/topic	[remote rejected] (fail to run proc-receive hook)
-	> Done
 	EOF
 	test_cmp expect actual &&
 

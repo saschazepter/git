@@ -22,7 +22,6 @@ test_expect_success "proc-receive: fail to update (ng, no message, $PROTOCOL/por
 	> remote: proc-receive> ng refs/for/main/topic        Z
 	> To <URL/of/upstream.git>
 	> !	HEAD:refs/for/main/topic	[remote rejected] (failed)
-	> Done
 	EOF
 	test_cmp expect actual &&
 
@@ -55,7 +54,6 @@ test_expect_success "proc-receive: fail to update (ng, with message, $PROTOCOL/p
 	> remote: proc-receive> ng refs/for/main/topic error msg        Z
 	> To <URL/of/upstream.git>
 	> !	HEAD:refs/for/main/topic	[remote rejected] (error msg)
-	> Done
 	EOF
 	test_cmp expect actual &&
 

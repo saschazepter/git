@@ -28,7 +28,6 @@ test_expect_success "proc-receive: report unexpected ref ($PROTOCOL/porcelain)" 
 	> To <URL/of/upstream.git>
 	>  	<COMMIT-B>:refs/heads/main	<COMMIT-A>..<COMMIT-B>
 	> !	HEAD:refs/for/main/topic	[remote rejected] (proc-receive failed to report status)
-	> Done
 	EOF
 	test_cmp expect actual &&
 

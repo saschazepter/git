@@ -63,7 +63,6 @@ test_expect_success "proc-receive: report update of mixed refs ($PROTOCOL/porcel
 	>  	HEAD:refs/for/main/topic	<COMMIT-A>..<COMMIT-B>
 	> !	HEAD:refs/for/next/topic1	[remote rejected] (fail to call Web API)
 	> !	HEAD:refs/for/next/topic3	[remote rejected] (proc-receive failed to report status)
-	> Done
 	EOF
 	test_cmp expect actual &&
 

@@ -23,7 +23,6 @@ test_expect_success "proc-receive: report unknown reference ($PROTOCOL/porcelain
 	> remote: error: proc-receive reported status on unknown ref: refs/for/main/topic        Z
 	> To <URL/of/upstream.git>
 	> !	HEAD:refs/for/a/b/c/my/topic	[remote rejected] (proc-receive failed to report status)
-	> Done
 	EOF
 	test_cmp expect actual &&
 

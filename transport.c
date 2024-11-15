@@ -998,10 +998,10 @@ static int git_transport_push(struct transport *transport, struct ref *remote_re
 	close(data->fd[0]);
 	/*
 	 * Atomic push may abort the connection early and close the pipe,
-	 * which may cause an error for `finish_connect()`. Ignore this error
-	 * for atomic git-push.
+	 * which may cause an error for `finish_connect()`. We can ignore
+	 * this error when both `--atomic` and `--dry-run` flags provided.
 	 */
-	if (ret || args.atomic)
+	if (ret || (args.atomic && args.dry_run))
 		finish_connect(data->conn);
 	else
 		ret = finish_connect(data->conn);
@@ -1561,7 +1561,18 @@ int transport_push(struct repository *r,
 	} else
 		push_ret = 0;
 	err = push_had_errors(remote_refs);
-	ret = push_ret | err;
+	/*
+	 * The return values of transport->vtable->hush_refs() across
+	 * different protocols are inconsistent. For the HTTP protocol,
+	 * the return value is zero when there are no connection errors
+	 * or protocol errors. We should reference the return code of
+	 * push_had_errors() to check for failures in updating references.
+	 * Since failing to update a reference in a --dry-run does not
+	 * count as an error, we could ignore the result of
+	 * push_had_errors() when both --porcelain and --dry-run options
+	 * are set.
+	 */
+	ret = (porcelain && pretend) ? push_ret : (push_ret | err);
 
 	if (!quiet || err)
 		transport_print_push_status(transport->url, remote_refs,
@@ -1578,7 +1589,7 @@ int transport_push(struct repository *r,
 			transport_update_tracking_ref(transport->remote, ref, verbose);
 	}
 
-	if (porcelain && !push_ret)
+	if (porcelain && !ret)
 		puts("Done");
 	else if (!quiet && !ret && !transport_refs_pushed(remote_refs))
 		/* stable plumbing output; do not modify or localize */

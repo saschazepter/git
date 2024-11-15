@@ -630,7 +630,7 @@ int send_pack(struct send_pack_args *args,
 				reject_atomic_push(remote_refs, args->send_mirror);
 				error("atomic push failed for ref %s. status: %d",
 				      ref->name, ref->status);
-				ret = args->porcelain ? 0 : -1;
+				ret = (args->porcelain && args->dry_run) ? 0 : -1;
 				goto out;
 			}
 			/* else fallthrough */
@@ -678,7 +678,7 @@ int send_pack(struct send_pack_args *args,
 		}
 	}
 
-	if (use_push_options) {
+	if (use_push_options && !args->dry_run) {
 		struct string_list_item *item;
 
 		packet_buf_flush(&req_buf);
@@ -760,11 +760,12 @@ int send_pack(struct send_pack_args *args,
 
 	if (ret < 0)
 		goto out;
-
-	if (args->porcelain) {
-		ret = 0;
+	else if (args->porcelain && args->dry_run)
+		/*
+		 * Knowing a ref will be rejected in a --dry-run does not
+		 * count as an error.
+		 */
 		goto out;
-	}
 
 	for (ref = remote_refs; ref; ref = ref->next) {
 		switch (ref->status) {
