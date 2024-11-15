@@ -424,12 +424,12 @@ static void filter_promisor_remote(struct repository *repo,
 				   const char *info)
 {
 	struct strbuf **remotes;
-	char *accept_str;
+	const char *accept_str;
 	enum accept_promisor accept = ACCEPT_NONE;
 	struct strvec names = STRVEC_INIT;
 	struct strvec urls = STRVEC_INIT;
 
-	if (!git_config_get_string("promisor.acceptfromserver", &accept_str)) {
+	if (!git_config_get_string_tmp("promisor.acceptfromserver", &accept_str)) {
 		if (!accept_str || !*accept_str || !strcasecmp("None", accept_str))
 			accept = ACCEPT_NONE;
 		else if (!strcasecmp("KnownUrl", accept_str))
@@ -486,7 +486,6 @@ static void filter_promisor_remote(struct repository *repo,
 		free(decoded_url);
 	}
 
-	free(accept_str);
 	strvec_clear(&names);
 	strvec_clear(&urls);
 	strbuf_list_free(remotes);
