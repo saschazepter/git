@@ -1629,7 +1629,8 @@ static int set_head(const struct ref *remote_refs)
 	else
 		head_name = xstrdup(heads.items[0].string);
 	if (head_name) {
-		int is_bare = is_bare_repository();
+		int is_bare = repo_is_bare(the_repository);
+
 		if (is_bare) {
 			strbuf_addstr(&b_head, "HEAD");
 			strbuf_addf(&b_remote_head, "refs/heads/%s", head_name);
