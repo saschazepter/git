@@ -164,7 +164,8 @@ static void determine_replay_mode(struct rev_cmdline_info *cmd_info,
 	if (!rinfo.positive_refexprs)
 		die(_("need some commits to replay"));
 	if (onto_name && *advance_name)
-		die(_("--onto and --advance are incompatible"));
+		die_for_incompatible_opt2(!!onto_name, "--onto",
+					  !!*advance_name, "--advance");
 	else if (onto_name) {
 		*onto = peel_committish(onto_name);
 		if (rinfo.positive_refexprs <
